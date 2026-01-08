@@ -1,0 +1,22 @@
+# --- Archivos de Python compilados (Basura) ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Entornos Virtuales (¡Muy importante no subirlos!) ---
+env/
+venv/
+.venv/
+entornocamara/
+
+# --- Variables de entorno y secretos (SEGURIDAD) ---
+.env
+.env.local
+
+# --- Archivos del sistema operativo ---
+.DS_Store
+Thumbs.db
+
+# --- IDEs (Configuraciones de editor) ---
+.vscode/
+.idea/
