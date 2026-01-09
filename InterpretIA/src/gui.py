@@ -34,7 +34,7 @@ class InterpretIA_App(ctk.CTk):
             self.splash_frame, 
             text="Bienvenid@ a\nInterpretIA", 
             font=("Roboto", 40, "bold"),
-            text_color="#3B8ED0" # Azul bonito
+            text_color="#C99EF0" # lila bonito
         )
         label_title.pack(pady=20)
 
@@ -45,8 +45,8 @@ class InterpretIA_App(ctk.CTk):
         )
         label_subtitle.pack(pady=10)
 
-        # Transición automática a los 3 segundos (3000 ms)
-        self.after(3000, self.setup_main_interface)
+        # Transición automática a los 4.5 segundos (3000 ms)
+        self.after(4500, self.setup_main_interface)
 
     def setup_main_interface(self):
         for widget in self.winfo_children():
@@ -58,7 +58,7 @@ class InterpretIA_App(ctk.CTk):
         self.grid_rowconfigure(0, weight=1)
 
         # 1. Área de Video (Izquierda)
-        self.video_frame = ctk.CTkFrame(self, fg_color="#1F1F1F")
+        self.video_frame = ctk.CTkFrame(self, fg_color="#644287") # Fondo lila oscuro
         self.video_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
         
         # Label donde se pintará la imagen de la cámara
@@ -71,7 +71,8 @@ class InterpretIA_App(ctk.CTk):
             self.video_frame,
             text="Esperando señas...",
             font=("Arial", 24, "bold"),
-            fg_color="#2B2B2B",
+            fg_color="#290B44", # fondo morado oscuro
+            text_color="C9A7EB", # texto lila claro
             corner_radius=10,
             height=60
         )
@@ -86,8 +87,8 @@ class InterpretIA_App(ctk.CTk):
             self.sidebar,
             text="INICIAR\nDETECCIÓN",
             font=("Roboto", 16, "bold"),
-            fg_color="#2CC985", # Verde
-            hover_color="#209160",
+            fg_color="#B72CC9", # Verde
+            hover_color="#6D2091",
             corner_radius=30, # ¡Aquí hacemos que no sea cuadrado!
             height=80,
             command=self.start_detection
@@ -112,7 +113,7 @@ class InterpretIA_App(ctk.CTk):
         self.btn_exit = ctk.CTkButton(
             self.sidebar,
             text="SALIR",
-            fg_color="#555555",
+            fg_color="#7F7283",
             command=self.show_goodbye_screen
         )
         self.btn_exit.pack(side="bottom", pady=40, padx=20)
@@ -177,7 +178,7 @@ class InterpretIA_App(ctk.CTk):
             self, 
             text="¡Gracias por usar\nInterpretIA!", 
             font=("Roboto", 40, "bold"),
-            text_color="#2CC985"
+            text_color="#9C2CC9"
         )
         label_bye.pack(expand=True)
         
