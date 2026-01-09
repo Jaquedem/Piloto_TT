@@ -72,7 +72,7 @@ class InterpretIA_App(ctk.CTk):
             text="Esperando señas...",
             font=("Arial", 24, "bold"),
             fg_color="#290B44", # fondo morado oscuro
-            text_color="C9A7EB", # texto lila claro
+            text_color="#CD9EF7", # texto lila claro
             corner_radius=10,
             height=60
         )
