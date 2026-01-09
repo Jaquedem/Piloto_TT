@@ -1,0 +1,20 @@
+names:
+- bien
+- comer
+- como
+- estar
+- gracias
+- hola
+- 'no'
+- que
+- tu
+nc: 9
+roboflow:
+  license: Private
+  project: my-first-project-voktg
+  url: https://app.roboflow.com/jaqueline-tcz2b/my-first-project-voktg/2
+  version: 2
+  workspace: jaqueline-tcz2b
+test: ../test/images
+train: ../train/images
+val: ../valid/images
