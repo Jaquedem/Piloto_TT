@@ -1,22 +1,30 @@
-# --- Archivos de Python compilados (Basura) ---
+# --- Python ---
 __pycache__/
 *.py[cod]
 *$py.class
 
-# --- Entornos Virtuales (¡Muy importante no subirlos!) ---
-env/
+# --- Entornos Virtuales (VITAL) ---
 venv/
-.venv/
-entornocamara/
-
-# --- Variables de entorno y secretos (SEGURIDAD) ---
+env/
 .env
-.env.local
+.venv/
 
-# --- Archivos del sistema operativo ---
-.DS_Store
-Thumbs.db
+# --- Modelos Grandes ---
+# Si tu best.pt pesa más de 100MB, descomenta la siguiente línea:
+# *.pt
+# (Como es YOLOv8 Nano, pesa ~6MB, así que déjalo comentado para subirlo)
 
-# --- IDEs (Configuraciones de editor) ---
+# --- VS Code ---
 .vscode/
-.idea/
+
+# --- Imágenes y Logs temporales ---
+*.log
+runs/
+__MACOSX/
+.DS_Store
+
+# --- Archivos de resultado de entrenamiento ---
+# (Para no subir gráficas sueltas si se generan)
+*.png
+*.jpg
+!assets/*.png  # Excepción: No ignorar pngs dentro de assets
