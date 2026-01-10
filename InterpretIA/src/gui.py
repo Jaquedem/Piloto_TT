@@ -158,23 +158,43 @@ class InterpretIA_App(ctk.CTk):
             ret, frame = self.cap.read()
             if ret:
                 self.frame_count += 1
+                sentence = "" # Variable para guardar el texto actual
+
+                # --- 1. PROCESAMIENTO IA (Cada 3 frames) ---
                 if self.frame_count % 3 == 0:
                     results = self.model(frame, verbose=False, conf=0.6, imgsz=320)
                     self.last_annotated_frame = results[0].plot()
+
+                    # A) ¿Detectó algo?
                     if results[0].boxes:
-                        label_name = self.model.names[int(results[0].boxes[0].cls)]
+                        box = results[0].boxes[0]
+                        class_id = int(box.cls)
+                        label_name = self.model.names[class_id]
+                        
+                        # Enviamos la etiqueta detectada al intérprete
                         sentence = self.interpreter.process_detection(label_name)
+                    else:
+                        # B) NO detectó nada -> Enviamos 'None' para checar tiempos de silencio
+                        # ¡ESTO ES CLAVE PARA QUE SE BORRE EL TEXTO!
+                        sentence = self.interpreter.process_detection(None)
+                    
+                    # Actualizamos el texto en la interfaz (solo cada 3 frames para no parpadear)
+                    if sentence:
                         self.text_display.configure(text=sentence)
-                
+
+                # --- 2. RENDERIZADO DE VIDEO ---
                 img_to_show = self.last_annotated_frame if self.last_annotated_frame is not None else frame
                 img = cv2.cvtColor(img_to_show, cv2.COLOR_BGR2RGB)
                 img_pil = Image.fromarray(img)
+                
                 w = self.video_label.winfo_width()
                 h = self.video_label.winfo_height()
                 if w < 10 or h < 10: w, h = 640, 480
+                
                 img_ctk = ctk.CTkImage(light_image=img_pil, dark_image=img_pil, size=(w, h))
                 self.video_label.configure(image=img_ctk)
                 self.video_label.image = img_ctk 
+
             self.after(10, self.update_camera)
     # -------------------------------------------------------------------
 
