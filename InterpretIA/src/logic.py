@@ -9,6 +9,10 @@ class SignLanguageInterpreter:
         self.detection_threshold = 8   # Ajuste para responsividad
         self.silence_threshold = 2.5   # Tiempo para borrar texto
 
+        # Estado del árbol de contexto
+        self.current_tree_node = None  # Nodo actual en el árbol
+        self.current_translation = "Esperando señas..."  # Traducción actual
+
         # --- ÁRBOL DE DECISIONES (Basado en tu PDF) ---
         # Estructura: { "SEÑA_ACTUAL": { "SIGUIENTE_SEÑA": { ...Result... }, "result": "Traducción base" } }
         self.grammar_tree = {
@@ -151,8 +155,12 @@ class SignLanguageInterpreter:
         }
 
     def process_detection(self, label):
+        """
+        Procesa una nueva detección y actualiza el estado interno.
+        No retorna nada - usar get_current_translation() para obtener el texto.
+        """
         current_time = time.time()
-        
+
         # 1. Filtro de Estabilidad (Solo si hay label)
         if label:
             if label == self.last_label:
@@ -165,46 +173,69 @@ class SignLanguageInterpreter:
             if self.consecutive_frames >= self.detection_threshold:
                 if not self.current_sequence or self.current_sequence[-1] != label:
                     self.current_sequence.append(label)
-                    self.last_detection_time = current_time # Renovamos el tiempo de vida
-                    print(f"✅ Seña: {label} -> {self.current_sequence}")
+                    self.last_detection_time = current_time
+                    print(f"✅ Seña detectada: {label}")
+                    print(f"   Secuencia actual: {self.current_sequence}")
+
+                    # Actualizar navegación del árbol con la nueva seña
+                    self._navigate_tree(label)
 
         # 2. Chequeo de Silencio (IMPORTANTE: Esto corre aunque label sea None)
-        # Si ha pasado mucho tiempo desde la última seña válida AGREGADA
         if self.current_sequence and (current_time - self.last_detection_time > self.silence_threshold):
-            return self.clear()
+            self.clear()
 
-        # 3. Retornar Traducción Actual
-        return self._translate_sequence()
+    def _navigate_tree(self, new_sign):
+        """
+        Navega por el árbol de gramática con la nueva seña detectada.
+        Actualiza current_tree_node y current_translation.
+        """
+        # Caso 1: Primera seña (iniciar en raíz)
+        if self.current_tree_node is None:
+            if new_sign in self.grammar_tree:
+                self.current_tree_node = self.grammar_tree[new_sign]
+                if "result" in self.current_tree_node:
+                    self.current_translation = self.current_tree_node["result"]
+                    print(f"   → Traducción: {self.current_translation}")
+                return
 
-    def _translate_sequence(self):
-        if not self.current_sequence:
-            return "Esperando señas..." # Texto por defecto
-        
-        current_node = self.grammar_tree
-        current_translation = "..." 
+        # Caso 2: Continuar desde nodo actual
+        # Intentar buscar la nueva seña en los hijos del nodo actual
+        if isinstance(self.current_tree_node, dict) and "children" in self.current_tree_node:
+            if new_sign in self.current_tree_node["children"]:
+                # Encontrada en hijos - seguir navegando
+                self.current_tree_node = self.current_tree_node["children"][new_sign]
+                if "result" in self.current_tree_node:
+                    self.current_translation = self.current_tree_node["result"]
+                    print(f"   → Traducción: {self.current_translation}")
+                return
 
-        for word in self.current_sequence:
-            found = False
-            # Buscar en hijos
-            if isinstance(current_node, dict) and "children" in current_node:
-                if word in current_node["children"]:
-                    current_node = current_node["children"][word]
-                    if "result" in current_node:
-                        current_translation = current_node["result"]
-                    found = True
-            
-            # Buscar en raíz (nueva frase)
-            if not found and word in self.grammar_tree:
-                current_node = self.grammar_tree[word]
-                if "result" in current_node:
-                    current_translation = current_node["result"]
-                # Reiniciamos contexto al nodo raíz nuevo
-            
-        return current_translation
+        # Caso 3: No encontrada en hijos - ¿Es una nueva frase raíz?
+        if new_sign in self.grammar_tree:
+            # Reset: iniciar nueva frase desde raíz
+            print(f"   🔄 Iniciando nueva frase con: {new_sign}")
+            self.current_tree_node = self.grammar_tree[new_sign]
+            if "result" in self.current_tree_node:
+                self.current_translation = self.current_tree_node["result"]
+                print(f"   → Traducción: {self.current_translation}")
+            # Limpiar secuencia anterior (nueva frase)
+            self.current_sequence = [new_sign]
+        else:
+            # Caso 4: Seña no reconocida en el contexto actual
+            print(f"   ⚠️ Seña '{new_sign}' no encaja en el contexto actual")
+
+    def get_current_translation(self):
+        """
+        Retorna la traducción actual sin procesar nada nuevo.
+        """
+        return self.current_translation
 
     def clear(self):
+        """
+        Limpia el estado del intérprete y resetea el árbol.
+        """
         self.current_sequence = []
         self.last_detection_time = time.time()
         self.consecutive_frames = 0
-        print("🧹 Limpiando pantalla...")
-        return "Esperando señas..."
+        self.current_tree_node = None
+        self.current_translation = "Esperando señas..."
+        print("🧹 Limpiando pantalla y reseteando árbol de contexto...")
