@@ -9,8 +9,8 @@ class SignLanguageInterpreter:
 
         # Tiempos optimizados para detección rápida
         self.detection_threshold = 3   # Frames para confirmar seña (más rápido)
-        self.cooldown_time = 0.5        # Espera entre señas (0.5 segundos)
-        self.silence_threshold = 1.5    # Tiempo sin detección para finalizar (1.5 segundos)
+        self.cooldown_time = 1.0        # Espera entre señas (1 segundo)
+        self.silence_threshold = 2.5    # Tiempo sin detección para finalizar (2.5 segundos)
         self.last_sign_added_time = 0   # Timestamp de última seña agregada
 
         # Estado del árbol de contexto
