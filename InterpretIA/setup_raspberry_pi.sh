@@ -25,13 +25,25 @@ echo "📥 Instalando librerías de OpenCV..."
 sudo apt-get install -y libatlas-base-dev libhdf5-dev libhdf5-serial-dev \
     libatlas-base-dev libjasper-dev libqtgui4 libqt4-test
 
-# 5. Crear entorno virtual
-echo "🔧 Creando entorno virtual..."
-python3 -m venv venv
+# 5. Detectar o crear entorno virtual
+if [ -d "entornocamara" ]; then
+    echo "✅ Entorno virtual 'entornocamara' encontrado"
+    VENV_NAME="entornocamara"
+elif [ -d "venv" ]; then
+    echo "✅ Entorno virtual 'venv' encontrado"
+    VENV_NAME="venv"
+elif [ -d "env" ]; then
+    echo "✅ Entorno virtual 'env' encontrado"
+    VENV_NAME="env"
+else
+    echo "🔧 Creando nuevo entorno virtual 'entornocamara'..."
+    python3 -m venv entornocamara
+    VENV_NAME="entornocamara"
+fi
 
 # 6. Activar entorno virtual
-echo "✅ Activando entorno virtual..."
-source venv/bin/activate
+echo "🔌 Activando entorno virtual: $VENV_NAME..."
+source $VENV_NAME/bin/activate
 
 # 7. Actualizar pip
 echo "⬆️  Actualizando pip..."
@@ -44,15 +56,8 @@ pip install opencv-python
 pip install Pillow
 pip install ultralytics
 
-# 9. Crear launcher
-echo "🚀 Creando launcher..."
-cat > run_interpretia.sh << 'EOF'
-#!/bin/bash
-cd "$(dirname "$0")"
-source venv/bin/activate
-python3 main.py
-EOF
-
+# 9. Dar permisos al launcher
+echo "🚀 Configurando launcher..."
 chmod +x run_interpretia.sh
 
 # 10. Crear acceso directo de escritorio

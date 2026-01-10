@@ -8,6 +8,7 @@ venv/
 env/
 .env
 .venv/
+entornocamara/
 
 # --- PyInstaller Build ---
 build/

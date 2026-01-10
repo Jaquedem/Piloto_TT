@@ -23,10 +23,13 @@ chmod +x setup_raspberry_pi.sh
 
 **Esto instalará:**
 - ✅ Dependencias del sistema (OpenCV, Pillow, etc.)
-- ✅ Entorno virtual de Python
+- ✅ Detecta tu entorno virtual existente (entornocamara, venv, env)
+- ✅ O crea uno nuevo si no existe
 - ✅ Todas las librerías necesarias
 - ✅ Launcher ejecutable (`run_interpretia.sh`)
 - ✅ Acceso directo en el escritorio
+
+**Nota:** Si ya tienes un entorno virtual (como `entornocamara`), el script lo detectará automáticamente y lo usará.
 
 **Tiempo estimado:** 10-15 minutos (dependiendo de la conexión)
 
@@ -71,11 +74,19 @@ sudo apt-get install -y python3-pip python3-opencv python3-pil python3-tk
 sudo apt-get install -y libatlas-base-dev libhdf5-dev libhdf5-serial-dev
 ```
 
-### 3. Crear entorno virtual
+### 3. Crear o activar entorno virtual
+
+**Si ya tienes un entorno (como `entornocamara`):**
 ```bash
 cd InterpretIA
-python3 -m venv venv
-source venv/bin/activate
+source entornocamara/bin/activate
+```
+
+**Si necesitas crear uno nuevo:**
+```bash
+cd InterpretIA
+python3 -m venv entornocamara  # O usa 'venv' si prefieres
+source entornocamara/bin/activate
 ```
 
 ### 4. Instalar dependencias Python
@@ -92,6 +103,14 @@ python3 main.py
 ---
 
 ## 🛠️ Solución de Problemas
+
+### Ya tengo un entorno virtual con otro nombre
+No hay problema. El launcher `run_interpretia.sh` detecta automáticamente estos nombres:
+- `entornocamara`
+- `venv`
+- `env`
+
+Si tu entorno tiene otro nombre, edita `run_interpretia.sh` y agrega tu nombre en la detección.
 
 ### Error: "Failed to execute child process 'xterm'"
 Este error ocurre cuando intentas ejecutar un archivo .sh sin permisos. **Solución:**
