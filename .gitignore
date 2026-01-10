@@ -9,6 +9,10 @@ env/
 .env
 .venv/
 
+# --- PyInstaller Build ---
+build/
+dist/
+
 # --- Modelos Grandes ---
 # Si tu best.pt pesa más de 100MB, descomenta la siguiente línea:
 # *.pt
