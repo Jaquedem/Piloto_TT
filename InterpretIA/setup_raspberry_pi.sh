@@ -56,14 +56,17 @@ pip install opencv-python
 pip install Pillow
 pip install ultralytics
 
-# 9. Dar permisos al launcher
-echo "🚀 Configurando launcher..."
+# 9. Dar permisos a los launchers
+echo "🚀 Configurando launchers..."
 chmod +x run_interpretia.sh
+chmod +x launch_gui.sh
+chmod +x start.py
 
 # 10. Crear acceso directo de escritorio
 echo "🖥️  Creando acceso directo de escritorio..."
 DESKTOP_FILE="$HOME/Desktop/InterpretIA.desktop"
 CURRENT_DIR="$(pwd)"
+PYTHON_PATH="$CURRENT_DIR/$VENV_NAME/bin/python3"
 
 cat > "$DESKTOP_FILE" << EOF
 [Desktop Entry]
@@ -71,13 +74,17 @@ Version=1.0
 Type=Application
 Name=InterpretIA
 Comment=Intérprete de Lengua de Señas Mexicana
-Exec=bash $CURRENT_DIR/run_interpretia.sh
+Exec=$PYTHON_PATH $CURRENT_DIR/start.py
 Icon=$CURRENT_DIR/src/Logo.png
 Terminal=false
-Categories=Application;Education;
+Categories=Application;Education;Accessibility;
+StartupNotify=true
 EOF
 
 chmod +x "$DESKTOP_FILE"
+
+# Marcar como confiable en Raspberry Pi OS
+gio set "$DESKTOP_FILE" metadata::trusted true 2>/dev/null || true
 
 echo ""
 echo "========================================="

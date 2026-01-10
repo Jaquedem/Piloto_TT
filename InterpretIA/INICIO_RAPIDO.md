@@ -1,15 +1,32 @@
 # 🚀 Inicio Rápido - InterpretIA en Raspberry Pi
 
-## Si ya tienes el entorno `entornocamara` configurado
+## ⚠️ ¿Error "Failed to execute child process 'xterm'"?
 
-### Opción 1: Usar el Launcher (Recomendado)
+**Solución rápida:** NO hagas doble clic en archivos `.sh`. Usa desde **terminal** o el nuevo `start.py`.
+
+Ver guía completa: **[SOLUCION_XTERM.md](SOLUCION_XTERM.md)**
+
+---
+
+## Métodos de Ejecución
+
+### Opción 1: Python Directo (✅ Recomendado - Sin error xterm)
+
+```bash
+cd InterpretIA
+python3 start.py
+```
+
+**Ventaja:** Funciona desde terminal Y con doble clic en el explorador de archivos.
+
+### Opción 2: Launcher Bash (Desde terminal)
 
 ```bash
 cd InterpretIA
 ./run_interpretia.sh
 ```
 
-El launcher detecta automáticamente tu entorno `entornocamara` y ejecuta la aplicación.
+El launcher detecta automáticamente tu entorno (`venv`, `entornocamara`, `env`).
 
 ---
 

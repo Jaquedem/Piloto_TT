@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=InterpretIA
+Comment=Intérprete de Lengua de Señas Mexicana
+Exec=/home/pi/Piloto_TT/InterpretIA/venv/bin/python3 /home/pi/Piloto_TT/InterpretIA/start.py
+Icon=/home/pi/Piloto_TT/InterpretIA/src/Logo.png
+Terminal=false
+Categories=Application;Education;Accessibility;
+StartupNotify=true
