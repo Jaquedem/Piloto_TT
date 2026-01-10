@@ -158,6 +158,9 @@ class InterpretIA_App(ctk.CTk):
         if self.is_running and self.cap.isOpened():
             ret, frame = self.cap.read()
             if ret:
+                # Espejar la imagen horizontalmente (efecto espejo)
+                frame = cv2.flip(frame, 1)
+
                 self.frame_count += 1
 
                 # --- 1. PROCESAMIENTO IA (Cada 3 frames) ---
