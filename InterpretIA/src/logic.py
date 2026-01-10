@@ -6,8 +6,12 @@ class SignLanguageInterpreter:
         self.last_detection_time = time.time()
         self.consecutive_frames = 0
         self.last_label = None
-        self.detection_threshold = 8   # Ajuste para responsividad
-        self.silence_threshold = 2.5   # Tiempo para borrar texto
+
+        # Tiempos optimizados para detección rápida
+        self.detection_threshold = 3   # Frames para confirmar seña (más rápido)
+        self.cooldown_time = 0.5        # Espera entre señas (0.5 segundos)
+        self.silence_threshold = 1.5    # Tiempo sin detección para finalizar (1.5 segundos)
+        self.last_sign_added_time = 0   # Timestamp de última seña agregada
 
         # Estado del árbol de contexto
         self.current_tree_node = None  # Nodo actual en el árbol
@@ -169,19 +173,34 @@ class SignLanguageInterpreter:
                 self.consecutive_frames = 0
                 self.last_label = label
 
-            # Agregar a la secuencia si es estable
+            # Verificar si la seña es estable Y si ya pasó el cooldown
             if self.consecutive_frames >= self.detection_threshold:
-                if not self.current_sequence or self.current_sequence[-1] != label:
+                # Verificar que sea una seña nueva (no repetida)
+                is_new_sign = not self.current_sequence or self.current_sequence[-1] != label
+
+                # Verificar cooldown: si hay secuencia, debe haber pasado cooldown_time
+                cooldown_passed = (self.last_sign_added_time == 0 or
+                                  (current_time - self.last_sign_added_time >= self.cooldown_time))
+
+                if is_new_sign and cooldown_passed:
+                    # Agregar la nueva seña
                     self.current_sequence.append(label)
                     self.last_detection_time = current_time
+                    self.last_sign_added_time = current_time  # Timestamp de cuando se agregó
+
                     print(f"✅ Seña detectada: {label}")
                     print(f"   Secuencia actual: {self.current_sequence}")
+                    print(f"   Esperando {self.cooldown_time}s para próxima seña...")
 
                     # Actualizar navegación del árbol con la nueva seña
                     self._navigate_tree(label)
 
-        # 2. Chequeo de Silencio (IMPORTANTE: Esto corre aunque label sea None)
+                    # Resetear frames para siguiente detección
+                    self.consecutive_frames = 0
+
+        # 2. Chequeo de Silencio (finalizar secuencia después de 1.5s sin nueva seña)
         if self.current_sequence and (current_time - self.last_detection_time > self.silence_threshold):
+            print(f"⏱️  Finalizando secuencia (sin nueva seña en {self.silence_threshold}s)")
             self.clear()
 
     def _navigate_tree(self, new_sign):
@@ -236,6 +255,7 @@ class SignLanguageInterpreter:
         self.current_sequence = []
         self.last_detection_time = time.time()
         self.consecutive_frames = 0
+        self.last_sign_added_time = 0
         self.current_tree_node = None
         self.current_translation = "Esperando señas..."
         print("🧹 Limpiando pantalla y reseteando árbol de contexto...")
