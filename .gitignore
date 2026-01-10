@@ -27,4 +27,8 @@ __MACOSX/
 # (Para no subir gráficas sueltas si se generan)
 *.png
 *.jpg
-!assets/*.png  # Excepción: No ignorar pngs dentro de assets
+*.jpeg
+
+# --- EXCEPCIONES (Lo que SÍ queremos subir) ---
+!assets/*.png    # Permite pngs en assets
+!src/Logo.png    # <--- ¡ESTA ES LA LÍNEA MÁGICA! Permite tu logo en src
