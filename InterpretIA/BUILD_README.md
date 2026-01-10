@@ -2,6 +2,15 @@
 
 Esta guía te ayudará a generar un ejecutable standalone de InterpretIA.
 
+## ⚠️ IMPORTANTE: Raspberry Pi
+
+**Si estás usando Raspberry Pi**, NO uses esta guía. En su lugar, consulta:
+📖 **[RASPBERRY_PI_README.md](RASPBERRY_PI_README.md)**
+
+La Raspberry Pi usa arquitectura ARM y requiere un proceso diferente.
+
+---
+
 ## 🎯 Opciones de Build
 
 ### **Opción 1: Script Automático (Recomendado)**
